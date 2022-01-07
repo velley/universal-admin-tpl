@@ -1,0 +1,20 @@
+<form nz-form [formGroup]="former">
+  <nz-form-item *ngFor="let item of enableItems"> 
+    <nz-form-label>{{item.label}}</nz-form-label>
+    <nz-form-control>
+      <ng-container [ngSwitch]="item.type">
+        <ng-container *ngSwitchCase="'input'">
+          <input type="text" nz-input [formControlName]="item.key">     
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'select'">
+          <app-selector-control-item [control]="item" [formControlName]="item.key"></app-selector-control-item>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'imgUpload'">
+          
+        </ng-container>
+      </ng-container>
+    </nz-form-control>      
+  </nz-form-item>    
+</form>

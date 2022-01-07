@@ -1,0 +1,13 @@
+<div  
+  class="container"
+  ntPagingContainer
+  #paging="ntPaging"
+  url="/miniapp/queryOrganization"  
+>  
+  <universal-data-filters [controls]="filters" [extractButtons]="[{key: 'add', label: '新增'}]" (btnClick)="onClick($event)"></universal-data-filters>
+  <universal-data-table [sourceData]="paging.data$ | async" [columns]="columns">    
+    <ng-template #columnAction let-rowData>
+      <button>编辑</button>
+    </ng-template>
+  </universal-data-table>     
+</div>

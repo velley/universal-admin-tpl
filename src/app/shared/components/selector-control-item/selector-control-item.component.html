@@ -1,0 +1,33 @@
+<ng-container *ngIf="control.optionsData; else serverSelector" >
+  <nz-select [(ngModel)]="selectValue" (ngModelChange)="onValueChange($event)" [nzShowSearch]="control.allowSearch">
+    <nz-option *ngFor="let item of control.optionsData" [nzLabel]="item[control.optionLabel]" [nzValue]="item[control.optionValue]"></nz-option>
+  </nz-select>
+</ng-container>
+
+<ng-template #serverSelector>
+  <div 
+    class="server-search-selector" 
+    ntPagingContainer 
+    #paging="ntPaging" 
+    [url]="control.serverGetter?.url" 
+    [options]="setServerSelectorPagingSetting(control.serverGetter?.pagingSetting)"
+    (created)="pagingSelectorCreated.emit(paging)"
+  >
+    <nz-select 
+      [(ngModel)]="selectValue"
+      [nzShowSearch]="control.allowSearch"
+      nzServerSearch
+      [nzDropdownRender]="loadingTemplate"
+      (ngModelChange)="onValueChange($event)"
+      (nzOnSearch)="addFilterForServerSelector(paging, control.serverGetter.searchKey, $event)"
+      (nzScrollToBottom)="paging.nextPage()"
+    >
+      <nz-option *ngFor="let item of paging.data$ | async" [nzLabel]="item[control.optionLabel]" [nzValue]="item[control.optionValue]"></nz-option>
+    </nz-select>
+    <ng-template #loadingTemplate >
+      <div *ngIf="paging.state === 'pending'" style="text-align: center;color: #999;">
+        <i nz-icon nzType="loading" nzTheme="outline"></i>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>

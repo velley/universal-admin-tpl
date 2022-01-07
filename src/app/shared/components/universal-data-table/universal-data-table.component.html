@@ -1,0 +1,52 @@
+<nz-table 
+  #basicTable 
+  [nzData]="sourceData"
+  [nzSize]="options.nzSize"
+  [nzBordered]="options.nzBordered"
+  [nzFrontPagination]="false"
+  [nzShowPagination]="options.nzShowPagination"
+  [nzPageIndex]="pageInfo.pageNo"
+  [nzPageSize]="pageInfo.pageSize"
+  [nzTotal]="total"
+  [nzLoading]="isLoading"
+  [nzScroll]="{ y: scrollY }"
+  (nzPageIndexChange)="onPageNoChange($event)"
+>
+  <thead>
+    <tr>
+      <th *ngFor="let col of columns">
+        {{col.header}}
+      </th>
+      <th *ngIf="action">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td class="column-field" *ngFor="let col of columns" >
+        <ng-container [ngSwitch]="col.type">
+          <ng-container *ngSwitchCase="'string'">
+            <span>{{data[col.field]}}</span>            
+          </ng-container>
+          <ng-container *ngSwitchCase="'int'">
+            <a href="#">{{data[col.field]}}</a>
+          </ng-container>
+          <ng-container *ngSwitchCase="'date'">
+            <span>{{data[col.field] | date:(col.dateFormat || 'yyyy-MM-dd')}}</span>            
+          </ng-container>
+          <ng-container *ngSwitchCase="'img'">
+            <img [src]="data[col.field]" alt="" style="max-width: 100px;max-height: 50px;">
+          </ng-container>
+          <ng-container *ngSwitchCase="'template'">
+            <ng-container [ngTemplateOutlet]="col.cellRender" [ngTemplateOutletContext]="{rowData: data, field: col.field}"></ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="'component'">
+            <ng-container [ngComponentOutlet]="col.cellRender" [ngComponentOutletInjector]="createInjectorWithData(data, col)"></ng-container>
+          </ng-container>
+        </ng-container>        
+      </td>
+      <td class="column-action" *ngIf="action"  >
+        <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
