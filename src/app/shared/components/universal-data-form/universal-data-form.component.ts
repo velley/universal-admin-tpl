@@ -14,13 +14,13 @@ import { UniversalFormModal } from '../../domain/modal.interface';
 })
 export class UniversalDataFormComponent implements OnInit, UniversalFormModal {
 
-  former: FormGroup;
-  modalRef: NzModalRef;
-  enableItems: UniversalFormItem[];
+  former!: FormGroup;
+  modalRef!: NzModalRef;
+  enableItems!: UniversalFormItem[];
   @Input() formItems: Array<UniversalFormItem> = [];
   @Input() editableData: any;
-  @Input() actionUrl: string;
-  @Input() successTip: string;
+  @Input() actionUrl!: string;
+  @Input() successTip!: string;
 
   constructor(
     private fb: FormBuilder,

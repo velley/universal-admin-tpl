@@ -1,6 +1,6 @@
 <section class="filter-container">
   <div class="header actions" *ngIf="controls.length > 2" >  
-    <ng-container [ngTemplateOutlet]="filterActions"></ng-container>  
+    <ng-container [ngTemplateOutlet]="actions"></ng-container>  
   </div>
   <form nz-form nz-row  nzGutter="15" [formGroup]="filterFormGroup">
     <div class="col" nz-col nzSpan="8" *ngFor="let control of controls">
@@ -20,20 +20,34 @@
                 (pagingSelectorCreated)="registerServerSelectorPaging(control.key, $event)"
               ></app-selector-control-item>
             </ng-container>
+            <!-- 筛选控件: 单选 -->
+            <ng-container *ngSwitchCase="'radio'">
+              <nz-radio-group [formControlName]="control.key">
+                <label *ngFor="let opt of control.options" nz-radio [nzValue]="opt[control.optionValue || 'value']">
+                  {{opt[control.optionLabel || 'label']}}
+                </label>
+              </nz-radio-group>
+            </ng-container>
+            <!-- 筛选控件：自定义组件 -->
+            <ng-container *ngSwitchCase="'component'">
+              <custome-form-item [formControlName]="control.key" [component]="control.render"></custome-form-item>
+            </ng-container>
           </ng-container>
         </nz-form-control>    
       </nz-form-item>
     </div>   
-    <div class="actions" class="col"nz-col nzSpan="8" style="text-align: right;" *ngIf="controls.length < 3">
-      <ng-container [ngTemplateOutlet]="filterActions"></ng-container>  
+    <div class="actions" class="col" nz-col nzSpan="8" style="text-align: right;" *ngIf="controls.length < 3">
+      <ng-container [ngTemplateOutlet]="actions"></ng-container>  
     </div> 
   </form>
 </section>
 
-<ng-template #filterActions let-btnSize="btnSize">
-  <button nz-button nzType="primary" [nzLoading]="isLoading" (click)="search()">查询</button>&nbsp;
-  <button nz-button nzType="default" [disabled]="isLoading" (click)="resetFilters()">重置</button>  
-  <ng-container *ngFor="let item of extractButtons">
-    &nbsp;<button nz-button (click)="onBtnClick(item.key)">{{item.label}}</button>
+<ng-template #actions >
+  <ng-container *ngIf="state$ | async as state">
+    <button nz-button nzType="primary" [nzLoading]="state==='pending'" [disabled]="state==='pending'" (click)="search()">查询</button>&nbsp;
+    <button nz-button nzType="default" [disabled]="state==='pending'" (click)="resetFilters()">重置</button>  
+    <ng-container *ngFor="let item of extractButtons">
+      &nbsp;<button nz-button (click)="onBtnClick(item.key)">{{item.label}}</button>
+    </ng-container>  
   </ng-container>   
 </ng-template>

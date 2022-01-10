@@ -19,5 +19,5 @@ export interface UniversalFormModal {
 export interface UniversalFormDialogOptions {
   title: string;
   component?: Type<any>;
-  data?: {formItems?: Array<UniversalFormItem | string>, [prop: string]: any};
+  data?: {formItems?: Array<UniversalFormItem>, [prop: string]: any};
 }

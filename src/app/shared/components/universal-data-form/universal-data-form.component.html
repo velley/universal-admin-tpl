@@ -7,13 +7,29 @@
           <input type="text" nz-input [formControlName]="item.key">     
         </ng-container>
 
+        <ng-container *ngSwitchCase="'textarea'">
+          <textarea rows="4" [formControlName]="item.key" nz-input></textarea>
+        </ng-container>
+
         <ng-container *ngSwitchCase="'select'">
           <app-selector-control-item [control]="item" [formControlName]="item.key"></app-selector-control-item>
         </ng-container>
 
-        <ng-container *ngSwitchCase="'imgUpload'">
-          
+        <ng-container *ngSwitchCase="'radio'">
+          <nz-radio-group [formControlName]="item.key">
+            <label *ngFor="let opt of item.options" nz-radio [nzValue]="opt[item.optionValue || 'value']">
+              {{opt[item.optionLabel || 'label']}}
+            </label>
+          </nz-radio-group>
         </ng-container>
+
+        <ng-container *ngSwitchCase="'imgUpload'">
+          <span>待实现...</span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'component'">
+          <custome-form-item [formControlName]="item.key" [component]="item.render"></custome-form-item>
+        </ng-container>     
       </ng-container>
     </nz-form-control>      
   </nz-form-item>    

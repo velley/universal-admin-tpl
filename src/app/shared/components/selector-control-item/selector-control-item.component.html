@@ -25,7 +25,7 @@
       <nz-option *ngFor="let item of paging.data$ | async" [nzLabel]="item[control.optionLabel]" [nzValue]="item[control.optionValue]"></nz-option>
     </nz-select>
     <ng-template #loadingTemplate >
-      <div *ngIf="paging.state === 'pending'" style="text-align: center;color: #999;">
+      <div *ngIf="(paging.state$ | async) === 'pending'" style="text-align: center;color: #999;">
         <i nz-icon nzType="loading" nzTheme="outline"></i>
       </div>
     </ng-template>

@@ -1,52 +1,61 @@
 <nz-table 
   #basicTable 
-  [nzData]="sourceData"
-  [nzSize]="options.nzSize"
-  [nzBordered]="options.nzBordered"
+  [nzData]="(pagingData$ |async) || sourceData"
+  [nzSize]="nzOptions?.nzSize || 'middle'"
+  [nzBordered]="nzOptions.nzBordered"
   [nzFrontPagination]="false"
-  [nzShowPagination]="options.nzShowPagination"
+  [nzShowPagination]="nzOptions.nzShowPagination"
   [nzPageIndex]="pageInfo.pageNo"
   [nzPageSize]="pageInfo.pageSize"
   [nzTotal]="total"
-  [nzLoading]="isLoading"
+  [nzLoading]="(isLoading$ | async) === 'pending'"
   [nzScroll]="{ y: scrollY }"
   (nzPageIndexChange)="onPageNoChange($event)"
 >
   <thead>
     <tr>
-      <th *ngFor="let col of columns">
+      <th nzWidth="35px" *ngIf="expand"></th>
+      <th [nzWidth]="col.width ? col.width + 'px' : null" *ngFor="let col of columns">
         {{col.header}}
       </th>
       <th *ngIf="action">操作</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of basicTable.data">
-      <td class="column-field" *ngFor="let col of columns" >
-        <ng-container [ngSwitch]="col.type">
-          <ng-container *ngSwitchCase="'string'">
-            <span>{{data[col.field]}}</span>            
-          </ng-container>
-          <ng-container *ngSwitchCase="'int'">
-            <a href="#">{{data[col.field]}}</a>
-          </ng-container>
-          <ng-container *ngSwitchCase="'date'">
-            <span>{{data[col.field] | date:(col.dateFormat || 'yyyy-MM-dd')}}</span>            
-          </ng-container>
-          <ng-container *ngSwitchCase="'img'">
-            <img [src]="data[col.field]" alt="" style="max-width: 100px;max-height: 50px;">
-          </ng-container>
-          <ng-container *ngSwitchCase="'template'">
-            <ng-container [ngTemplateOutlet]="col.cellRender" [ngTemplateOutletContext]="{rowData: data, field: col.field}"></ng-container>
-          </ng-container>
-          <ng-container *ngSwitchCase="'component'">
-            <ng-container [ngComponentOutlet]="col.cellRender" [ngComponentOutletInjector]="createInjectorWithData(data, col)"></ng-container>
-          </ng-container>
-        </ng-container>        
-      </td>
-      <td class="column-action" *ngIf="action"  >
-        <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
-      </td>
-    </tr>
+    <ng-container *ngFor="let data of basicTable.data">
+      <tr>
+        <td class="expand-col" [nzShowExpand]="true" (nzExpandChange)="data.$$expand = $event" *ngIf="expand"></td>
+        <td class="column-field" *ngFor="let col of columns" >
+          <ng-container 
+            *ngIf="cellRender[col.field]; else baseRender" 
+            [ngTemplateOutlet]="cellRender[col.field]"
+            [ngTemplateOutletContext]="{$implicit: data, field: col.field}"
+          ></ng-container>
+          <ng-template #baseRender [ngSwitch]="col.type">
+            <ng-container *ngSwitchCase="'text'">
+              <span>{{data[col.field]}}</span>            
+            </ng-container>
+            <ng-container *ngSwitchCase="'time'">
+              <span>{{data[col.field] | date:(col.timeFormat || 'yyyy-MM-dd')}}</span>            
+            </ng-container>
+            <ng-container *ngSwitchCase="'img'">
+              <img [src]="data[col.field]" alt="" style="max-width: 100px;max-height: 50px;">
+            </ng-container>
+            <ng-container *ngSwitchCase="'template'">
+              <ng-container [ngTemplateOutlet]="col.cellRender" [ngTemplateOutletContext]="{$implicit: data, field: col.field}"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'component'">
+              <ng-container [ngComponentOutlet]="col.cellRender" [ngComponentOutletInjector]="createInjectorWithData(data, col)"></ng-container>
+            </ng-container>
+          </ng-template>        
+        </td>
+        <td class="column-action" *ngIf="action">
+          <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
+        </td>
+      </tr>
+      <tr class="expand" [nzExpand]="data.$$expand">
+        <ng-container [ngTemplateOutlet]="expand" [ngTemplateOutletContext]="{$implicit: data}"></ng-container>
+      </tr>
+    </ng-container>    
   </tbody>
 </nz-table>

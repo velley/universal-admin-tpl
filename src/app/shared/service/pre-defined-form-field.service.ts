@@ -1,32 +1,33 @@
-import { Inject, Injectable, Optional } from '@angular/core';
-import { PREDEFINED_FORM_ITEM, UniversalFormItem } from '../domain/form.interface';
+import { Injectable } from '@angular/core';
+import { UniversalFormItem } from '../domain/form.interface';
 
+interface FormItemMap {
+  [prop: string]: UniversalFormItem
+}
 @Injectable()
 export class PreDefinedFormItem {
 
-  private static formItemMap: {[prop: string]: UniversalFormItem} = {};
+  private static formItemMap: FormItemMap = {};
 
+  /**
+   * 静态方法，用于新增预定义表单项控件
+   * @param property 表单项名称, 必须以FormItem结尾
+   * @param item 表单项数据
+   */
   static add = (property: string, item: UniversalFormItem) => {
+    if(!property.endsWith('FormItem')) {
+      throw new Error('调用PreDefinedFormItem.add方法添加预定义表单项时,控件名property必须以FormItem结尾')
+    }
     PreDefinedFormItem.formItemMap[property] = item;
   }
 
-  static get = (property: string) => {
+  /** 根据名称获取表单项数据 */
+  static get = (property: keyof FormItemMap) => {
     const item = PreDefinedFormItem.formItemMap[property];
     if(item) return item;
-    throw new Error('无法匹配预定义的表单字段项: '+property)
+    throw new Error('无法匹配预定义的表单项控件: '+property)
   }
 
-  constructor(
-    @Optional() @Inject(PREDEFINED_FORM_ITEM) private formFields: UniversalFormItem[]
-  ) {
-    console.log('fields', this.formFields)
-  }
+  constructor() {}
 
-  get(field: string) {
-    if(!this.formFields) return null;
-    const res = this.formFields.find(el => el.key === field);
-    if(res) return res;
-    console.error('无法匹配预定义的表单字段项: '+field);
-    return null;
-  }
 }

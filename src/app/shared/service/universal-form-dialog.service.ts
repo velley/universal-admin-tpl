@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { Observable } from 'rxjs';
 import { UniversalDataFormComponent } from '../components/universal-data-form/universal-data-form.component';
 import { UniversalFormDialogOptions, UniversalFormModal } from '../domain/modal.interface';
@@ -20,33 +20,26 @@ export class UniversalFormModalService {
       nzContent: options.component || UniversalDataFormComponent,
       nzComponentParams: <any>options.data,
       nzOnOk: modalInstance => {
-        console.log('xxxx',  modalInstance)
         const caller =  modalInstance.modalApply() as any;
-        if(caller instanceof Observable) {
-          console.log('is obs')
-          // modalRef.updateConfig({nzOkLoading: true, nzCancelDisabled: false})
-          caller.toPromise().then(r => console.log('then', r))
+        if(caller instanceof Observable) {      
           return caller.toPromise()
         } else {
           return new Promise(resolve => resolve(!!caller))
         } 
       },
-      nzOnCancel: () => {
-        const caller = modalRef.componentInstance.modalCancel();
+      nzOnCancel: modalInstance => {
+        const caller = modalInstance.modalCancel();
         if(caller instanceof Observable) {
           modalRef.updateConfig({nzCancelLoading: true, nzOkDisabled: false});
-          caller.subscribe(res => this.close(modalRef, res));
-        } else if(!!caller) {
-          this.close(modalRef, caller);
+          return caller.toPromise()
+        } else {
+          return new Promise(resolve => resolve(!!caller))
         } 
       },
     })
-    modalRef.componentInstance.modalCreated(modalRef);
+    modalRef.afterOpen.subscribe(_ => {
+      if(modalRef.componentInstance?.modalCreated) modalRef.componentInstance?.modalCreated(modalRef);
+    })    
+    return modalRef;
   }  
-
-  private close(ref: NzModalRef, res?: any ) {
-    ref.updateConfig({nzOkLoading: false, nzCancelLoading: false});
-    ref.close(res);
-    ref.destroy();
-  }
 }

@@ -20,18 +20,15 @@ export class SelectorControlItemComponent implements OnInit, ControlValueAccesso
   @Output() pagingSelectorCreated = new EventEmitter<PagingContainerDirective>();
   selectValue: any;
 
-  pushFormChange: (val: any) => void;
-  pushFormTouched: (touch: any) => void;
+  pushFormChange!: (val: any) => void;
+  pushFormTouched!: (touch: any) => void;
 
-  constructor(
-    // private
-  ) { }
-  
+  constructor() { }  
 
   ngOnInit(): void {
   }
 
-  setServerSelectorPagingSetting(setting: PagingSetting) {
+  setServerSelectorPagingSetting(setting: Partial<PagingSetting> ) {
     return {scrollLoading: true, ...(setting || {})}   
   }
 
@@ -40,7 +37,6 @@ export class SelectorControlItemComponent implements OnInit, ControlValueAccesso
   }
 
   onValueChange(val: any) {
-    console.log(val)
     this.pushFormChange(val);
     this.pushFormTouched(true);
   }

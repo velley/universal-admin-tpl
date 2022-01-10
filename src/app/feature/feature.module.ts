@@ -7,7 +7,6 @@ import { CustomeCellRenderComponent } from './components/custome-cell-render/cus
 import { ListFormComponent } from './components/list-form/list-form.component';
 
 
-
 @NgModule({
   declarations: [
     ListComponent,

@@ -1,41 +1,35 @@
-import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PagingContainerDirective, PagingDataService, PagingSetting } from 'ng-treater';
 import { UniversalFormItem } from '../../domain/form.interface';
-import { PreDefinedFormItem } from '../../service/pre-defined-form-field.service';
 
 @Component({
   selector: 'universal-data-filters',
   templateUrl: './universal-data-filters.component.html',
-  styleUrls: ['./universal-data-filters.component.less']
+  styleUrls: ['./universal-data-filters.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UniversalDataFiltersComponent implements OnInit {
 
-  @Input() controls: Array<UniversalFormItem> ;
+  @Input() controls!: Array<UniversalFormItem> ;
   @Input() extractButtons: Array<{key: string; label: string; style?: string}> = [];
   @Output() btnClick = new EventEmitter<string>();
-  enableControls: UniversalFormItem[];
-  filterFormGroup: FormGroup;
+  filterFormGroup!: FormGroup;
   serverSelectPagingMap: {[prop: string]: PagingContainerDirective} = {};
 
   constructor(
     private fb: FormBuilder,
+    private changeDef: ChangeDetectorRef,
     @Optional() private hostPaging: PagingDataService
   ) { }
 
-  get isLoading() {
-    return this.hostPaging.loadingState$.value === 'pending';
+  get state$() {
+    console.log('dirty check', this)
+    return this.hostPaging.loadingState$;
   }
 
   ngOnInit(): void {
     this.filterFormGroup = this.fb.group({});
-    // this.enableControls = this.controls.map(control => {
-    //   if(typeof control === 'string') {
-    //     return this.preDefinedFormItem.get(control)
-    //   } else {
-    //     return control
-    //   }
-    // }).filter(e => !!e);
     this.controls      
       .forEach(control => {
         this.filterFormGroup.addControl(control.key, new FormControl(''));

@@ -7,7 +7,6 @@ import { SharedModule } from '../shared/shared.module';
 import { CoreRoutingModule } from './core-routing.module';
 import { IconsProviderModule } from '../shared/icons-provider.module';
 import { NG_TREATER_SETTINGS, NgTreaterSetting } from 'ng-treater';
-import { PREDEFINED_FORM_ITEM, UniversalFormItem } from '../shared/domain/form.interface';
 import { PreDefinedFormItem } from '../shared/service/pre-defined-form-field.service';
 
 
@@ -39,7 +38,7 @@ import { PreDefinedFormItem } from '../shared/service/pre-defined-form-field.ser
 })
 export class CoreModule {
   constructor() {
-    PreDefinedFormItem.add('orgItem', {
+    PreDefinedFormItem.add('orgFormItem', {
       type: 'select',
       label: '选择机构',
       key: 'org',

@@ -17,6 +17,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { IconsProviderModule } from './icons-provider.module';
 import { SelectorControlItemComponent } from './components/selector-control-item/selector-control-item.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { CustomeFormItemComponent } from './components/custome-form-item/custome-form-item.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     UniversalDataFiltersComponent,
     UniversalDataFormComponent,
     UniversalValidatorTipsDirective,
-    SelectorControlItemComponent
+    SelectorControlItemComponent,
+    CustomeFormItemComponent
   ],
   imports: [
     CommonModule,
@@ -32,10 +35,12 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     FlexLayoutModule,
     IconsProviderModule,
     NzButtonModule,
+    NzRadioModule,
     NzTableModule,
     NzInputModule,
     NzFormModule,
     NzMessageModule,
+    
     NzModalModule,
     ReactiveFormsModule,
     NzSelectModule,
@@ -54,6 +59,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     ReactiveFormsModule,
     NzMessageModule,
     NzButtonModule,
+    NzRadioModule,
     NzTableModule,
     NzModalModule,
     PagingDataModule,

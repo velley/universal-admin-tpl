@@ -1,1 +1,12 @@
-<p>list-form works!</p>
+<nz-input-group nzCompact style="width: 100%;">
+    <nz-select style="min-width: 80px;">
+      <nz-option nzLabel="第一" nzValue="1"></nz-option>
+      <nz-option nzLabel="第二" nzValue="2"></nz-option>
+      <nz-option nzLabel="第三" nzValue="3"></nz-option>
+    </nz-select>
+    <div style="max-width: 100%;">
+      <input  nz-input type="text" [(ngModel)]="val" (ngModelChange)="onChange($event)">
+    </div>    
+</nz-input-group>
+
+
