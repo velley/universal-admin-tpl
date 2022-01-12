@@ -42,11 +42,13 @@ export class UniversalDataFormComponent implements OnInit, UniversalFormModal {
   }
 
   modalApply() {
-    this.former.markAsDirty();
-    this.former.markAllAsTouched();
+    Object.values(this.former.controls).forEach(control => {
+      control.markAsDirty();
+      control.updateValueAndValidity({ onlySelf: true });
+    })
     if(this.former.invalid) return false;
-    return this.http.post(this.actionUrl, this.former)
-      .pipe( tap(_ => this.successTip && this.message.success(this.successTip)))
+    return this.http.post(this.actionUrl, this.former.value)
+      .pipe(tap(_ => this.successTip && this.message.success(this.successTip)))
   }
   
   modalCancel() {

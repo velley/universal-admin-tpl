@@ -1,7 +1,7 @@
 <form nz-form [formGroup]="former">
   <nz-form-item *ngFor="let item of enableItems"> 
     <nz-form-label>{{item.label}}</nz-form-label>
-    <nz-form-control>
+    <nz-form-control universalValidatorTips>
       <ng-container [ngSwitch]="item.type">
         <ng-container *ngSwitchCase="'input'">
           <input type="text" nz-input [formControlName]="item.key">     

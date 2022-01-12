@@ -38,7 +38,7 @@ export interface ComponentColumn extends BasedTableColumn {
 }
 
 export interface UniversalTableEditOptions {
-  editUrl?: string;
+  editUrl: string;
   editMethod?: 'post' | 'put';
   insertUrl: string;
   insertMethod?: 'get' | 'post' | 'put';
@@ -52,7 +52,7 @@ export interface UniversalDataGrid {
   desc?: string;
   columns: UniversalTableColumn[];
   filters: UniversalFormItem[];
-  eidtor?: UniversalTableEditOptions;
+  formOptions?: UniversalTableEditOptions;
 }
 
 export interface UniversalTableCell<T = any> {

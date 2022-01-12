@@ -5,6 +5,7 @@ import { PreDefinedFormItem } from 'src/app/shared/service/pre-defined-form-fiel
 import { UniversalFormModalService } from 'src/app/shared/service/universal-form-dialog.service';
 import { CustomeCellRenderComponent } from '../../components/custome-cell-render/custome-cell-render.component';
 import { ListFormComponent } from '../../components/list-form/list-form.component';
+import { list_grid } from '../../const/list.const';
 
 @Component({
   selector: 'app-list',
@@ -22,43 +23,9 @@ export class ListComponent implements OnInit {
     return ''
   }
 
-  columns: UniversalTableColumn[] = [
-    {field: 'name', type: 'text', width: 160, header: '名称' },
-    {field: 'describe', type: 'component', header: '介绍', width: 300, cellRender: CustomeCellRenderComponent },
-    {field: 'time', type: 'time', header: '时间', dateFormat: 'yyyy-MM-dd HH:mm' },
-  ]
-
-  filters: Array<UniversalFormItem>  = [
-    {type: 'input', key: 'name', label: '条目姓名'},
-    {
-      type: 'select', 
-      key: 'classify', 
-      label: '分类', 
-      optionsData: [
-        {title: 'ccc', code: '333'},
-        {title: 'yyy', code: '222'}
-      ],
-      optionLabel: 'title',
-      optionValue: 'code'
-    },
-    PreDefinedFormItem.get('orgFormItem'),
-    {
-      type: 'component',
-      label: '自定筛选',
-      key: 'custome',
-      render: ListFormComponent
-    },
-    {
-      type: 'radio',
-      key: 'state',
-      label: '发布状态',
-      options: [
-        {label: '已发布', value: 'yes'}, 
-        {label: '未发布', value: 'no'},
-        {label: '草稿', value: 'caogao'}
-      ]
-    }
-  ]
+  columns: UniversalTableColumn[] = list_grid.columns;
+  filters: Array<UniversalFormItem>  = list_grid.filters;
+  formOptions = list_grid.formOptions;
 
   ngOnInit(): void { }
 

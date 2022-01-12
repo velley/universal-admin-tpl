@@ -1,7 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ContentChild, ElementRef, Host, Injector, Input, OnInit, Optional, TemplateRef } from '@angular/core';
 import { PagingContainerDirective } from 'ng-treater';
 import { NzTableSize } from 'ng-zorro-antd/table';
-import { debounceTime, fromEvent, startWith } from 'rxjs';
+import { debounceTime, fromEvent, Observable, startWith } from 'rxjs';
 import { UniversalFormItem } from '../../domain/form.interface';
 import { UniversalTableColumn, UniversalTableEditOptions, UNIVERSAL_TABLE_CELL } from '../../domain/table.interfce';
 import { UniversalFormModalService } from '../../service/universal-form-dialog.service';
@@ -33,7 +34,7 @@ export class UniversalDataTableComponent implements OnInit, AfterViewInit {
   /** nzTable的配置参数，可参考ng-zorro的table组件 */
   @Input() nzOptions: NzTableOptions = DEFAULT_TABLE_OPTIONS;
   /** 针对表格数据的增/删/改配置 */
-  @Input() editOptions!: UniversalTableEditOptions;
+  @Input() formOptions!: UniversalTableEditOptions | undefined;
   /** 单元格渲染模板, 传入的模板会覆盖column中的渲染配置 */
   @Input() cellRender: {[prop: string]: TemplateRef<any>} = {};
   /** 是否让表格高度自动撑满页面的剩余空间 */
@@ -65,7 +66,8 @@ export class UniversalDataTableComponent implements OnInit, AfterViewInit {
     @Optional() @Host() private paging: PagingContainerDirective,
     private injector: Injector,
     private element: ElementRef,
-    private formModal: UniversalFormModalService
+    private formModal: UniversalFormModalService,
+    private http: HttpClient
   ) {
     if(!this.paging) console.error('universal-data-talbe组件目前需要与ntPagingContainer或PagingDataService结合使用')
   }
@@ -102,16 +104,47 @@ export class UniversalDataTableComponent implements OnInit, AfterViewInit {
     })
   }
 
-  openFormModal(title: string, url: string, rowData?: any) {
+  openFormModal(title: string, rowData?: any) {
+    if(!this.formOptions) throw new Error('openFormModal方法需要UniversalDataTable组件接收formOptions入参');
     const formItems = this.columns.map(col => col.formItem) as UniversalFormItem[];
     if(formItems.some(item => !!item)) {
       const ref = this.formModal.create({
         title,
-        data: {formItems, editableData: rowData, actionUrl: url}
+        data: {
+          formItems, 
+          editableData: rowData, 
+          actionUrl: rowData ? this.parseApiUrl(this.formOptions.editUrl, rowData) : this.formOptions.insertUrl
+        }
       })
-      ref.afterClose.subscribe(r => r && (rowData ? this.paging.fresh() : this.paging.reset()))
+      ref.afterClose.subscribe(r => r !== 'cancel' && (rowData ? this.paging.fresh() : this.paging.reset()))
     }else {
       console.error('openFormModal方法需要在colums中传入formItem配置，否则无法正常调用')
     }
+  }
+
+  callDeleteApi(rowData: any) {
+    if(!this.formOptions || !this.formOptions.deleteUrl) throw new Error('callDeleteApi方法需要UniversalDataTable组件接收formOptions.deleteUrl入参');
+    let req: Observable<any> ;
+    const url = this.parseApiUrl(this.formOptions.deleteUrl, rowData);
+    switch(this.formOptions.deleteMethod) {
+      default:
+      case 'delete':
+        req = this.http.delete(url)
+        break;
+      case 'post':
+        req = this.http.post(url, rowData)
+        break;
+    }
+    req.subscribe(_ => this.paging.reset())
+  }
+
+  /** 解析接口调用地址, 根据传入的data将url中{}包裹的字段解析为实际值 */
+  private parseApiUrl(url: string, data: any) {
+    const reg = /\{\w+\}/;
+    const res = url.match(reg);
+    if(!res) return url;
+    const exp = res[0];
+    const field = exp.slice(1, exp.length - 1)
+    return url.replace(res[0], data[field])
   }
 }

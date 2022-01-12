@@ -24,16 +24,15 @@ export class UniversalFormModalService {
         if(caller instanceof Observable) {      
           return caller.toPromise()
         } else {
-          return new Promise(resolve => resolve(!!caller))
+          return new Promise(resolve => resolve(caller ? 'apply' : false))
         } 
       },
       nzOnCancel: modalInstance => {
         const caller = modalInstance.modalCancel();
         if(caller instanceof Observable) {
-          modalRef.updateConfig({nzCancelLoading: true, nzOkDisabled: false});
           return caller.toPromise()
         } else {
-          return new Promise(resolve => resolve(!!caller))
+          return new Promise(resolve => resolve(caller ? 'cancel' : false))
         } 
       },
     })
