@@ -12,13 +12,18 @@
 @primary-color-outline: fade(@primary-color, @outline-fade);
 
 @body-background: #aaa;
+@layout-header-height: 58px;
 /* You can add global styles to this file, and also import other style files */
 
 *::-webkit-scrollbar{
   // background: mat-color($primary);
   background-color: transparent;
   width: 3px;
-  max-height: 3px;
+  height: 3px;
+  &:hover{
+    width: 5px;
+    height: 5px;
+  }
 }
 *::-webkit-scrollbar-thumb{
   // background: mat-color($accent);

@@ -29,7 +29,12 @@ export const list_grid: UniversalDataGrid = {
         label: '输入介绍'
       }
     },
-    {field: 'time', type: 'time', header: '时间', dateFormat: 'yyyy-MM-dd HH:mm' },
+    {field: 'time', type: 'time', header: '时间', dateFormat: 'yyyy-MM-dd HH:mm', formItem: {
+      type: 'datepicker',
+      showTime: true,
+      key: 'time',
+      label: '输入时间'
+    } },
   ],
   filters: [
     {type: 'input', key: 'name', label: '条目姓名'},

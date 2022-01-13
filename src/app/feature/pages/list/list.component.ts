@@ -3,8 +3,6 @@ import { UniversalFormItem } from 'src/app/shared/domain/form.interface';
 import { UniversalTableColumn } from 'src/app/shared/domain/table.interfce';
 import { PreDefinedFormItem } from 'src/app/shared/service/pre-defined-form-field.service';
 import { UniversalFormModalService } from 'src/app/shared/service/universal-form-dialog.service';
-import { CustomeCellRenderComponent } from '../../components/custome-cell-render/custome-cell-render.component';
-import { ListFormComponent } from '../../components/list-form/list-form.component';
 import { list_grid } from '../../const/list.const';
 
 @Component({

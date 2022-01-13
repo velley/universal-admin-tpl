@@ -9,6 +9,9 @@ import { IconsProviderModule } from '../shared/icons-provider.module';
 import { NG_TREATER_SETTINGS, NgTreaterSetting } from 'ng-treater';
 import { PreDefinedFormItem } from '../shared/service/pre-defined-form-field.service';
 
+import zh from '@angular/common/locales/zh';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(zh);
 
 @NgModule({
   declarations: [

@@ -36,13 +36,16 @@
   </nz-sider>
   <nz-layout>
     <nz-header>
-      <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-            <i class="trigger"
-               nz-icon
-               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-            ></i>
+      <div class="app-header" fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed" fxFlex>
+          <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
         </span>
+        <div class="header-title" fxFlex="120px">管理后台标题</div>
+        <span fxFlex="1 1"></span>
+        <div class="actions" fxFlex="50px">
+          <i class="icon" nz-icon nzType="bell"></i>&nbsp;&nbsp;
+          <i class="icon" nz-icon nzType="user"></i>           
+        </div>
       </div>
     </nz-header>
     <nz-content fxLayout="column">

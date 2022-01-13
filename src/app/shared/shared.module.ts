@@ -12,6 +12,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { IconsProviderModule } from './icons-provider.module';
@@ -40,11 +41,11 @@ import { CustomeFormItemComponent } from './components/custome-form-item/custome
     NzInputModule,
     NzFormModule,
     NzMessageModule,
-    
+    NzDatePickerModule,
     NzModalModule,
     ReactiveFormsModule,
     NzSelectModule,
-    PagingDataModule
+    PagingDataModule,
   ],
   exports: [
     /** 导出应用内通用组件 */
@@ -60,6 +61,7 @@ import { CustomeFormItemComponent } from './components/custome-form-item/custome
     NzMessageModule,
     NzButtonModule,
     NzRadioModule,
+    NzDatePickerModule,
     NzTableModule,
     NzModalModule,
     PagingDataModule,

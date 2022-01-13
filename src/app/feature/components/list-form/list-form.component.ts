@@ -17,14 +17,9 @@ export class ListFormComponent implements OnInit, CustomeFormItemAccessor {
   }
 
   writeValue(val: any): void {
-    console.log('write custome', val)
     this.val = val;
   }
-
-  resetValue(): void {
-      
-  }
-
+  
   registerValueChange(fn: (val: any) => void): void {
     this.pushValue = fn;
   }

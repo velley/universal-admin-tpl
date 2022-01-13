@@ -2,7 +2,7 @@ import { InjectionToken, Type } from "@angular/core";
 import { ValidatorFn } from "@angular/forms";
 import { PagingSetting } from "ng-treater";
 
-export type FormItemType = 'select' | 'radio' | 'input' | 'textarea' | 'imgUpload' | 'component';
+export type FormItemType = 'select' | 'radio' | 'input' | 'datepicker' | 'textarea' | 'imgUpload' | 'component';
 
 export interface BasedFormItem {
   /** 表单控件类型 */
@@ -52,12 +52,18 @@ export interface RadioFormItem extends BasedFormItem {
   optionValue?: string;
 }
 
+export interface DatePickerFormItem extends BasedFormItem {
+  type: 'datepicker',
+  showTime?: boolean;
+  format?: string;
+}
+
 export interface ComponentFormItem extends BasedFormItem {
   type: 'component';
   render: Type<any>;
 }
 
-export type UniversalFormItem = BasedFormItem | SelectFormItem | RadioFormItem | ComponentFormItem;
+export type UniversalFormItem = BasedFormItem | SelectFormItem | RadioFormItem | DatePickerFormItem | ComponentFormItem;
 
 export interface CustomeFormItemAccessor {
   writeValue(val: any): void;

@@ -17,22 +17,16 @@
   box-shadow: 2px 0 6px rgba(230, 239, 248, 0.35);
 }
 
-.header-trigger {
-  height: 64px;
-  padding: 20px 24px;
-  font-size: 20px;
-  cursor: pointer;
-  transition: all .3s,padding 0s;
-}
+
 
 
 
 .sidebar-logo {
   position: relative;
-  height: 64px;
+  height: 58px;
   padding-left: 24px;
   overflow: hidden;
-  line-height: 64px;
+  line-height: 58px;
   // background: #001529;
   transition: all .3s;
 }
@@ -62,21 +56,40 @@ nz-header {
 
 .app-header {
   position: relative;
-  height: 64px;
-  padding: 0;
+  height: 58px;
+  padding: 0 15px;
+  color: #fff;
   // background-color: #388e3c;
   background-color: #4caf50;  
   box-shadow: 0 4px 12px #388e3c;
-  .trigger{
+  .header-trigger {
+    // height: 58px;
+    // padding: 0px 14px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all .3s,padding 0s;
+    .trigger{
+      position: relative;
+      top: 1.5px;
+    }
+  }  
+  .header-title{
     color: #fff;
+    font-size: larger;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .actions{
+    i{ 
+      font-size: medium;
+      cursor: pointer;
+    }
   }
 }
 
 nz-content {
-  // margin: 10px;
   .nav-breadcumb{
-    // height: 40px;
-    padding: 5px 10px;
+    padding: 5px 15px;
     background-color: #4caf50;
     & ::ng-deep .ant-breadcrumb-link a,i {
       color: #fff;

@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -10,13 +11,15 @@ import { UniversalFormModal } from '../../domain/modal.interface';
 @Component({
   selector: 'universal-data-form',
   templateUrl: './universal-data-form.component.html',
-  styleUrls: ['./universal-data-form.component.less']
+  styleUrls: ['./universal-data-form.component.less'],
+  providers: [DatePipe]
 })
 export class UniversalDataFormComponent implements OnInit, UniversalFormModal {
 
   former!: FormGroup;
   modalRef!: NzModalRef;
   enableItems!: UniversalFormItem[];
+  dateFormatMap: {[prop: string]: string} = {};
   @Input() formItems: Array<UniversalFormItem> = [];
   @Input() editableData: any;
   @Input() actionUrl!: string;
@@ -25,7 +28,8 @@ export class UniversalDataFormComponent implements OnInit, UniversalFormModal {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private datePipe: DatePipe
   ) { }  
 
   ngOnInit(): void {
@@ -35,6 +39,10 @@ export class UniversalDataFormComponent implements OnInit, UniversalFormModal {
       this.former.addControl(item.key, new FormControl(null, item.validators))
     })
     if(this.editableData) this.former.patchValue(this.editableData);
+  }
+
+  onDateChange(date: Date, key: string, format?: string) {
+    this.dateFormatMap[key] = this.datePipe.transform(date, format || 'yyyy-MM-dd HH:mm') as string;
   }
 
   modalCreated?(modal: NzModalRef<any, any>): void {
@@ -47,7 +55,9 @@ export class UniversalDataFormComponent implements OnInit, UniversalFormModal {
       control.updateValueAndValidity({ onlySelf: true });
     })
     if(this.former.invalid) return false;
-    return this.http.post(this.actionUrl, this.former.value)
+    const data = this.former.value;
+
+    return this.http.post(this.actionUrl, {...this.former.value, ...this.dateFormatMap})
       .pipe(tap(_ => this.successTip && this.message.success(this.successTip)))
   }
   

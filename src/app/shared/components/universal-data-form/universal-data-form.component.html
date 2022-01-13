@@ -23,6 +23,10 @@
           </nz-radio-group>
         </ng-container>
 
+        <ng-container *ngSwitchCase="'datepicker'">
+          <nz-date-picker [formControlName]="item.key" [nzShowTime]="item.showTime" (ngModelChange)="onDateChange($event, item.key, item.format)"></nz-date-picker>
+        </ng-container>
+
         <ng-container *ngSwitchCase="'imgUpload'">
           <span>待实现...</span>
         </ng-container>

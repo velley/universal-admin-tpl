@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ContentChild, ElementRef, Host, Injector, Input, OnInit, Optional, TemplateRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Host, Injector, Input, OnInit, Optional, TemplateRef } from '@angular/core';
 import { PagingContainerDirective } from 'ng-treater';
 import { NzTableSize } from 'ng-zorro-antd/table';
 import { debounceTime, fromEvent, Observable, startWith } from 'rxjs';
@@ -67,7 +67,8 @@ export class UniversalDataTableComponent implements OnInit, AfterViewInit {
     private injector: Injector,
     private element: ElementRef,
     private formModal: UniversalFormModalService,
-    private http: HttpClient
+    private http: HttpClient,
+    private changeDef: ChangeDetectorRef
   ) {
     if(!this.paging) console.error('universal-data-talbe组件目前需要与ntPagingContainer或PagingDataService结合使用')
   }
@@ -88,6 +89,7 @@ export class UniversalDataTableComponent implements OnInit, AfterViewInit {
     const tableHeaderHeight = 40; //nzTable的表头高度，暂时设为常量
     if (rect.width > 0 && rect.height > 0) {
       this.scrollY = window.innerHeight - host.getBoundingClientRect().top - (this.nzOptions.nzShowPagination ? 75 : 25) - tableHeaderHeight + 'px';
+      this.changeDef.markForCheck();
     }
   }
 
