@@ -1,5 +1,6 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Host, Injector, Input, OnInit, Optional, TemplateRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Host, Injector, Input, OnInit, Optional, Output, TemplateRef } from '@angular/core';
 import { PagingContainerDirective } from 'ng-treater';
 import { NzTableSize } from 'ng-zorro-antd/table';
 import { debounceTime, fromEvent, Observable, startWith } from 'rxjs';
@@ -25,26 +26,38 @@ const DEFAULT_TABLE_OPTIONS: NzTableOptions = {
   styleUrls: ['./universal-data-table.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UniversalDataTableComponent implements OnInit, AfterViewInit {
+export class UniversalDataTableComponent<T> implements OnInit, AfterViewInit {
   
   /** 表格的列信息 */
   @Input() columns!: UniversalTableColumn[];
   /** 表格的行数据 */
-  @Input() sourceData: any[] = [];
+  @Input() sourceData: T[] = [];
   /** nzTable的配置参数，可参考ng-zorro的table组件 */
   @Input() nzOptions: NzTableOptions = DEFAULT_TABLE_OPTIONS;
   /** 针对表格数据的增/删/改配置 */
   @Input() formOptions!: UniversalTableEditOptions | undefined;
   /** 单元格渲染模板, 传入的模板会覆盖column中的渲染配置 */
-  @Input() cellRender: {[prop: string]: TemplateRef<any>} = {};
+  @Input() cellRender: {[prop: string]: TemplateRef<{$implicit: T; field: string}>} = {};
   /** 是否让表格高度自动撑满页面的剩余空间 */
   @Input() autoFulledHeight: boolean = true;
+  /** 是否启用行选择功能 */
+  @Input() rowSelectable: boolean = false;
+  /** 是否启用行拖动排序功能 */
+  @Input() rowDraggable: boolean = false;
+  /** 行数据的唯一标识字段(字段名默认为‘id’,某些扩展功能需要用到该字段，如行选择/行拖拽排序等) */
+  @Input() uniqueField: string = 'id';
   /** 操作列模板 */
-  @ContentChild('colAction', {read: TemplateRef}) action!: TemplateRef<any>;  
+  @ContentChild('colAction', {read: TemplateRef}) action!: TemplateRef<{$implicit: T}>;  
   /** 行扩展模板 */
-  @ContentChild('rowExpand', {read: TemplateRef}) expand!: TemplateRef<any>; 
+  @ContentChild('rowExpand', {read: TemplateRef}) expand!: TemplateRef<{$implicit: T}>; 
+
+  @Output() rowSelectionChange = new EventEmitter<Array<string |number>>();
+  @Output() rowDragDropped = new EventEmitter<{prev: Array<string |number>; current: Array<string |number>}>();
+
   /** nzTable内容区域的滚动高度(autoFulledHeight为true时需要此属性) */
   scrollY!: string;
+  /** 被选中行的集合 */
+  selection = new Set<string | number>();
 
   get pageInfo() {
     return this.paging.page
@@ -138,6 +151,33 @@ export class UniversalDataTableComponent implements OnInit, AfterViewInit {
         break;
     }
     req.subscribe(_ => this.paging.reset())
+  }
+
+  onAllChecked(ev: boolean, data: readonly any[]) {
+    if(ev) {
+      data.forEach(el => {
+        this.selection.add(el[this.uniqueField])
+      })
+    } else {
+      this.selection.clear()
+    }
+    this.rowSelectionChange.emit(Array.from(this.selection))
+  }
+
+  onItemChecked(ev: boolean, id: string) {
+    if(ev) {
+      this.selection.add(id)
+    } else {
+      this.selection.delete(id);
+    }
+    this.rowSelectionChange.emit(Array.from(this.selection))
+  }
+
+  onDrop(event: CdkDragDrop<any[]>,  data: readonly any[]) {
+    const prev = data.map(item => item[this.uniqueField])
+    moveItemInArray(data as any[], event.previousIndex, event.currentIndex);
+    const current = data.map(item => item[this.uniqueField])
+    this.rowDragDropped.emit({prev, current});
   }
 
   /** 解析接口调用地址, 根据传入的data将url中{}包裹的字段解析为实际值 */

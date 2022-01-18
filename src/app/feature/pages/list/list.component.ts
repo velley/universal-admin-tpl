@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UniversalFormItem } from 'src/app/shared/domain/form.interface';
 import { UniversalTableColumn } from 'src/app/shared/domain/table.interfce';
@@ -13,7 +14,8 @@ import { list_grid } from '../../const/list.const';
 export class ListComponent implements OnInit {
 
   constructor(
-    private formDialog: UniversalFormModalService
+    private formDialog: UniversalFormModalService,
+    private http: HttpClient
   ) { }
 
   get val() {
@@ -25,7 +27,9 @@ export class ListComponent implements OnInit {
   filters: Array<UniversalFormItem>  = list_grid.filters;
   formOptions = list_grid.formOptions;
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    // this.http.get('/api/heroes').subscribe(res => console.log(res))
+  }
 
   onClick(key: string) {
     if(key === 'add') {

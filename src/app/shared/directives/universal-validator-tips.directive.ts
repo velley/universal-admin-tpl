@@ -26,7 +26,6 @@ export class UniversalValidatorTipsDirective implements AfterViewInit, OnDestroy
     const control = this.nzFormControl.defaultValidateControl;
     this.subscriber 
     = control?.valueChanges
-      // ?.pipe(mergeMap(_ => control.statusChanges as Observable<any>))
       ?.subscribe( _ => {
         console.log(_)
         if(control?.hasError('required')) {

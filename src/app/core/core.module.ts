@@ -8,6 +8,9 @@ import { CoreRoutingModule } from './core-routing.module';
 import { IconsProviderModule } from '../shared/icons-provider.module';
 import { NG_TREATER_SETTINGS, NgTreaterSetting } from 'ng-treater';
 import { PreDefinedFormItem } from '../shared/service/pre-defined-form-field.service';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+
+import { InMemHeroService } from '../../mock/data-mock.service'
 
 import zh from '@angular/common/locales/zh';
 import { registerLocaleData } from '@angular/common';
@@ -23,7 +26,7 @@ registerLocaleData(zh);
     SharedModule,
     NzLayoutModule,
     NzBreadCrumbModule,
-    NzMenuModule
+    NzMenuModule,    
   ],
   providers: [
     {provide: NG_TREATER_SETTINGS, useValue: <NgTreaterSetting>{

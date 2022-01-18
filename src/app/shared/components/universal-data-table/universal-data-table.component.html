@@ -3,7 +3,7 @@
   [nzData]="(pagingData$ |async) || sourceData"
   [nzSize]="nzOptions?.nzSize || 'middle'"
   [nzBordered]="nzOptions.nzBordered"
-  [nzFrontPagination]="false"
+  [nzFrontPagination]="!nzOptions.nzShowPagination"
   [nzShowPagination]="nzOptions.nzShowPagination"
   [nzPageIndex]="pageInfo.pageNo"
   [nzPageSize]="pageInfo.pageSize"
@@ -14,18 +14,30 @@
 >
   <thead>
     <tr>
+      <th nzWidth="35px" *ngIf="rowDraggable"></th>
       <th nzWidth="35px" *ngIf="expand"></th>
+      <th
+        *ngIf="rowSelectable"
+        nzWidth="35px"
+        [nzChecked]="selection.size === basicTable.data.length"
+        [nzIndeterminate]="selection.size> 0 && selection.size < basicTable.data.length"
+        (nzCheckedChange)="onAllChecked($event, basicTable.data)"
+      ></th>      
       <th [nzWidth]="col.width ? col.width + 'px' : null" *ngFor="let col of columns">
         {{col.header}}
       </th>
       <th *ngIf="action">操作</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody cdkDropList (cdkDropListDropped)="onDrop($event, basicTable.data)">
     <ng-container *ngFor="let data of basicTable.data">
-      <tr>
-        <td class="expand-col" [nzShowExpand]="true" (nzExpandChange)="data.$$expand = $event" *ngIf="expand"></td>
-        <td class="column-field" *ngFor="let col of columns" >
+      <tr cdkDrag>
+        <td *ngIf="rowDraggable" class="dragger-col" cdkDragHandle>
+          <i nz-icon nzType="menu" nzTheme="outline"></i>
+        </td>
+        <td class="expand-col" *ngIf="expand" [nzShowExpand]="true" (nzExpandChange)="data.$$expand = $event" ></td>
+        <td class="select-col" *ngIf="rowSelectable" [nzChecked]="selection.has(data[uniqueField])" (nzCheckedChange)="onItemChecked($event, data[uniqueField])"></td>        
+        <td class="field-col" *ngFor="let col of columns" >
           <ng-container 
             *ngIf="cellRender[col.field]; else baseRender" 
             [ngTemplateOutlet]="cellRender[col.field]"

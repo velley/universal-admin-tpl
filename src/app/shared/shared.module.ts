@@ -13,6 +13,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { IconsProviderModule } from './icons-provider.module';
@@ -20,13 +21,17 @@ import { SelectorControlItemComponent } from './components/selector-control-item
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { CustomeFormItemComponent } from './components/custome-form-item/custome-form-item.component';
+import { FormSubmitterDirective } from './directives/form-submitter.directive';
+import { FormHandlerDirective } from './directives/form-handler.directive';
 
 @NgModule({
   declarations: [
     UniversalDataTableComponent,
     UniversalDataFiltersComponent,
     UniversalDataFormComponent,
+    FormHandlerDirective,
     UniversalValidatorTipsDirective,
+    FormSubmitterDirective,
     SelectorControlItemComponent,
     CustomeFormItemComponent
   ],
@@ -41,6 +46,7 @@ import { CustomeFormItemComponent } from './components/custome-form-item/custome
     NzInputModule,
     NzFormModule,
     NzMessageModule,
+    DragDropModule,
     NzDatePickerModule,
     NzModalModule,
     ReactiveFormsModule,
@@ -52,6 +58,8 @@ import { CustomeFormItemComponent } from './components/custome-form-item/custome
     UniversalDataTableComponent,
     UniversalDataFiltersComponent,
     UniversalDataFormComponent,
+    FormSubmitterDirective,
+    FormHandlerDirective,
     /** 导出通用模块 */
     CommonModule,
     FlexLayoutModule,
@@ -61,6 +69,7 @@ import { CustomeFormItemComponent } from './components/custome-form-item/custome
     NzMessageModule,
     NzButtonModule,
     NzRadioModule,
+    DragDropModule,
     NzDatePickerModule,
     NzTableModule,
     NzModalModule,

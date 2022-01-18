@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
 import { LayoutComponent } from './core/pages/layout/layout.component';
+import { mock, setup } from 'mockjs';
 
 registerLocaleData(zh);
 
@@ -17,9 +18,18 @@ registerLocaleData(zh);
     CoreModule,
     BrowserModule,    
     HttpClientModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [LayoutComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    // setup({})
+    // mock('/api/heroes', {
+    //   'data|10': [
+    //     {'name': '@cname', 'id|+1': 1}
+    //   ]
+    // })
+  }
+}

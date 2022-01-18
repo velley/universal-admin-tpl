@@ -5,7 +5,7 @@
   url="/miniapp/queryOrganization"  
 >  
   <universal-data-filters [controls]="filters" [extractButtons]="[{key: 'add', label: '新增'}]" (btnClick)="dataTable.openFormModal('新增')"></universal-data-filters>
-  <universal-data-table #dataTable [columns]="columns" [cellRender]="{describe: describeTpl}" [formOptions]="formOptions">    
+  <universal-data-table #dataTable [columns]="columns" [rowSelectable]="true" [rowDraggable]="true" uniqueField="code" [cellRender]="{describe: describeTpl}" [formOptions]="formOptions">    
     <ng-template #colAction let-rowData>
       <button nz-button (click)="dataTable.openFormModal('编辑', rowData)">编辑</button>
     </ng-template>
@@ -16,5 +16,6 @@
 </div>
 
 <ng-template #describeTpl let-rowData let-field="field">
+  <span>描述:</span>
   <span style="color: red;">{{rowData[field]}}</span>
 </ng-template>

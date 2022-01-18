@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, forwardRef, Injector, Input, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, forwardRef, Injector, Input, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CustomeFormItemAccessor } from '../../domain/form.interface';
 
@@ -24,7 +24,8 @@ export class CustomeFormItemComponent implements OnInit, AfterViewInit, ControlV
   constructor(
     private container: ViewContainerRef,
     private cfr: ComponentFactoryResolver,
-    private injector: Injector
+    private injector: Injector,
+    private changeDef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -43,6 +44,7 @@ export class CustomeFormItemComponent implements OnInit, AfterViewInit, ControlV
     setTimeout(() => {
       this.container.insert(component.hostView);
       if(this.val) this.componentRef.instance.writeValue(this.val);
+      this.changeDef.markForCheck(); //由于父组件为OnPush模式，此处需要手动触发脏检查
     })    
   }
 
